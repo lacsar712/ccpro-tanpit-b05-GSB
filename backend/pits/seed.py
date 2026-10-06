@@ -1,4 +1,4 @@
-from pits.models import LiquorSample, Pit, User, Yard
+from pits.models import CooldownSetting, LiquorSample, Pit, User, Yard
 
 
 def seed_demo() -> None:
@@ -10,6 +10,10 @@ def seed_demo() -> None:
     worker.role = "worker"
     worker.set_password("123456")
     worker.save()
+    setting = CooldownSetting.current()
+    if setting.minutes < CooldownSetting.MIN_MINUTES:
+        setting.minutes = CooldownSetting.DEFAULT_MINUTES
+        setting.save(update_fields=["minutes"])
     if Yard.objects.exists():
         return
     yard = Yard.objects.create(name="南冈鞣场", village="青皮村")

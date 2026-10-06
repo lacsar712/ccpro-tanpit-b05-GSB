@@ -9,12 +9,12 @@ services:
       - "6460:5432"
     volumes:
       - tanpit_5060_9060_6460_pg:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U tanpit -d tanpit"]
-      interval: 5s
-      timeout: 5s
-      retries: 30
-      start_period: 40s
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -U tanpit -d tanpit"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 30
+    #   start_period: 40s
 
   backend:
     build: ./backend
@@ -25,13 +25,12 @@ services:
     ports:
       - "9060:8770"
     depends_on:
-      db:
-        condition: service_healthy
+      - db
 
   frontend:
     build: ./frontend
     ports:
-      - "5060:80"
+      - "5160:80"
     depends_on:
       - backend
 
