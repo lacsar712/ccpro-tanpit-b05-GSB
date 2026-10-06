@@ -6,15 +6,15 @@ services:
       POSTGRES_USER: tanpit
       POSTGRES_PASSWORD: tanpit
     ports:
-      - "6460:5432"
+      - "6470:5432"
     volumes:
-      - tanpit_5060_9060_6460_pg:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U tanpit -d tanpit"]
-      interval: 5s
-      timeout: 5s
-      retries: 30
-      start_period: 40s
+      - tanpit_5070_9070_6470_pg:/var/lib/postgresql/data
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -U tanpit -d tanpit"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 30
+    #   start_period: 40s
 
   backend:
     build: ./backend
@@ -23,17 +23,16 @@ services:
       JWT_SECRET: tanpit-dev-secret
       DJANGO_SECRET_KEY: tanpit-django-secret
     ports:
-      - "9060:8770"
+      - "9070:8770"
     depends_on:
-      db:
-        condition: service_healthy
+      - db
 
   frontend:
     build: ./frontend
     ports:
-      - "5060:80"
+      - "5070:80"
     depends_on:
       - backend
 
 volumes:
-  tanpit_5060_9060_6460_pg:
+  tanpit_5070_9070_6470_pg:

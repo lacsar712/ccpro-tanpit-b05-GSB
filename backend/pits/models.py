@@ -1,5 +1,6 @@
 from django.contrib.auth.hashers import check_password, make_password
 from django.db import models
+from django.utils import timezone
 
 
 class User(models.Model):
@@ -29,6 +30,7 @@ class Pit(models.Model):
     status = models.CharField(max_length=20, default=STATUS_FILL)
     row = models.IntegerField(default=0)
     col = models.IntegerField(default=0)
+    status_changed_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
         unique_together = ("yard", "code")
@@ -39,3 +41,10 @@ class LiquorSample(models.Model):
     taken_at = models.DateTimeField(auto_now_add=True)
     ph = models.FloatField()
     operator = models.CharField(max_length=64, blank=True)
+
+
+class CooldownRule(models.Model):
+    """拨入某状态后须静候的分钟数，仅管理员可改。"""
+
+    status = models.CharField(max_length=20, unique=True)
+    minutes = models.PositiveIntegerField(default=0)
